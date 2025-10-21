@@ -1,20 +1,36 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
-group = 'ecole.lamagent'
-version = '1.0-SNAPSHOT'
+group = 'com.agent'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Exemple : dépendance pour logique IA (similaire à Chatbot)
+    implementation 'org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1'
+    implementation 'org.nd4j:nd4j-native-platform:1.0.0-M2.1'
+
+    // Log utile
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'  // pour le JSON
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
 }
 
-test {
-    useJUnitPlatform()
+application {
+    mainClass = 'com.agent.Main'
+}
+
+run {
+    standardInput = System.in
 }
