@@ -16,12 +16,10 @@ repositories {
 }
 
 dependencies {
-    // Exemple : dépendance pour logique IA (similaire à Chatbot)
-    implementation 'org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1'
-    implementation 'org.nd4j:nd4j-native-platform:1.0.0-M2.1'
+    def langchain4jVersion = '0.33.0'
 
-    // Log utile
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
+    implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+    implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'  // pour le JSON
     implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
