@@ -2,7 +2,7 @@ plugins {
     id 'application'
 }
 
-group = 'com.agent'
+group = 'lamagent'
 version = '1.0.0'
 
 java {
@@ -16,17 +16,17 @@ repositories {
 }
 
 dependencies {
-    def langchain4jVersion = '0.33.0'
+    def langchain4jVersion = '0.34.0'
 
     implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
     implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'  // pour le JSON
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
+    implementation 'org.json:json:20231013'
 }
 
 application {
-    mainClass = 'com.agent.Main'
+    mainClass = 'lamagent.ui.Console'
 }
 
 run {
