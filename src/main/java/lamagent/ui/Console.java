@@ -1,6 +1,6 @@
 package lamagent.ui;
 
-import lamagent.agent.ChatAgent;
+import lamagent.agent.OllamaCookingAgent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Console {
 
     public static void main(String[] args) {
-        ChatAgent agent = new ChatAgent();
+        OllamaCookingAgent agent = new OllamaCookingAgent();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("👩‍🍳 Bienvenue dans ton assistant culinaire intelligent !");
