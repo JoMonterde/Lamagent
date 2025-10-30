@@ -1,5 +1,6 @@
 package lamagent.agent;
 
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
@@ -52,6 +53,7 @@ public class OllamaCookingAgent {
         assistant = AiServices.builder(CookingAssistant.class)
                 .chatLanguageModel(model)
                 .tools(checker)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 
@@ -70,7 +72,7 @@ public class OllamaCookingAgent {
      * @return a recipe suggestion as a string, or a message indicating that no safe recipe
      *         could be found
      */
-    public String suggestRecipe(List<String> pAllergies, List<String> pPreferences) {
-        return assistant.suggestRecipe(pAllergies, pPreferences);
+    public String suggestRecipe(String pQuestion) {
+        return assistant.suggestRecipe(pQuestion);
     }
 }
