@@ -36,22 +36,14 @@ public class Console {
         System.out.println("Type 'exit' to leave.\n");
 
         while (true) {
-            System.out.print("Allergens (separate by a virgule ',' and without space ' '): ");
-            String allergyInput = scanner.nextLine();
-            if (allergyInput.equalsIgnoreCase("exit")) {
+            System.out.print("Question: ");
+            String question = scanner.nextLine();
+            if (question.equalsIgnoreCase("exit")) {
                 break;
             }
+            System.out.println("Search");
 
-            System.out.print("Preferences (separate by a virgule ',' and without space ' '): ");
-            String prefInput = scanner.nextLine();
-            if (prefInput.equalsIgnoreCase("exit")) {
-                break;
-            }
-
-            List<String> allergies = Arrays.asList(allergyInput.split(","));
-            List<String> prefs = Arrays.asList(prefInput.split(","));
-
-            String response = agent.suggestRecipe(allergies, prefs);
+            String response = agent.suggestRecipe(question);
             System.out.println("\nResponse :\n" + response);
             System.out.println("\n---------------------------------\n");
         }
