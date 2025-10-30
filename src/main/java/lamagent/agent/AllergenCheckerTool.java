@@ -88,7 +88,7 @@ public class AllergenCheckerTool {
                     JSONObject obj = new JSONObject(line);
                     String label = obj.getString("labelName").toLowerCase();
                     double confidence = obj.getDouble("confidence");
-
+                    System.out.println(label + ": " + confidence);
                     if (confidence > THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED) {
                         for (String allergy : pListUserAllergen) {
                             if (label.contains(allergy.toLowerCase())) {
