@@ -1,6 +1,5 @@
 package lamagent.agent;
 
-import dev.langchain4j.agent.tool.Tool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,16 +10,24 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
 import org.json.JSONObject;
 
+import dev.langchain4j.agent.tool.Tool;
+
 /**
- * The {@code AllergenCheckerTool} class provides functionality to check whether a list of food ingredients
- * contains potential allergens based on a user’s specified allergens. It integrates with the
- * <a href="https://www.nyckel.com/">Nyckel API</a> to analyze ingredients and identify allergens
+ * The {@code AllergenCheckerTool} class provides functionality to check whether
+ * a list of food ingredients
+ * contains potential allergens based on a user’s specified allergens. It
+ * integrates with the
+ * <a href="https://www.nyckel.com/">Nyckel API</a> to analyze ingredients and
+ * identify allergens
  * with a certain confidence threshold.
  * <p>
- * This tool authenticates via OAuth2 using a client ID and secret to obtain an access token,
- * then calls a remote classification function to detect allergens in ingredient descriptions.
+ * This tool authenticates via OAuth2 using a client ID and secret to obtain an
+ * access token,
+ * then calls a remote classification function to detect allergens in ingredient
+ * descriptions.
  * </p>
  *
  * <p>
@@ -42,10 +49,13 @@ public class AllergenCheckerTool {
     public static final double THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED = 0.7;
 
     /**
-     * Checks whether the given list of ingredients contains any allergens specified by the user.
-     * This method sends the ingredient data to the Nyckel API, which returns potential allergens
+     * Checks whether the given list of ingredients contains any allergens specified
+     * by the user.
+     * This method sends the ingredient data to the Nyckel API, which returns
+     * potential allergens
      * with confidence scores. Any allergens with a confidence score above
-     * {@link #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED} and matching a user-provided allergen name
+     * {@link #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED} and matching a
+     * user-provided allergen name
      * are flagged as detected.
      * <p>
      * The result indicates whether the recipe is considered safe or unsafe
@@ -53,23 +63,28 @@ public class AllergenCheckerTool {
      * </p>
      *
      * @param pListUserAllergen a list of allergens that the user wants to avoid
-     * @param pListIngredient a list of ingredients to be analyzed for potential allergens
+     * @param pListIngredient   a list of ingredients to be analyzed for potential
+     *                          allergens
      * @return a message indicating whether allergens were found in the ingredients.
-     *         If an error occurs during the API call, the error message is returned.
+     *         If an error occurs during the API call, the error message is
+     *         returned.
      *
-     *         <p><b>Returns examples:</b></p>
+     *         <p>
+     *         <b>Returns examples:</b>
+     *         </p>
      *         <ul>
-     *             <li>
-     *                 {@code "Safe recipe: no allergen detected among [peanut, milk]"}
-     *                 — if no matching allergens were found.
-     *             </li>
-     *             <li>
-     *                 {@code "Unsafe recipe: allergens detected: peanut (0.91), milk (0.85), "}
-     *                 — if allergens were found.
-     *             </li>
-     *             <li>
-     *                 {@code "Error: unable to check allergens (Network error)"} — if the API call fails.
-     *             </li>
+     *         <li>
+     *         {@code "Safe recipe: no allergen detected among [peanut, milk]"}
+     *         — if no matching allergens were found.
+     *         </li>
+     *         <li>
+     *         {@code "Unsafe recipe: allergens detected: peanut (0.91), milk (0.85), "}
+     *         — if allergens were found.
+     *         </li>
+     *         <li>
+     *         {@code "Error: unable to check allergens (Network error)"} — if the
+     *         API call fails.
+     *         </li>
      *         </ul>
      *
      * @see #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED
@@ -80,8 +95,7 @@ public class AllergenCheckerTool {
             InputStream ingredientAllergens = retrieveIngredientAllergens(pListIngredient);
 
             StringBuilder foundAllergens = new StringBuilder();
-            try (BufferedReader br =
-                         new BufferedReader(new InputStreamReader(ingredientAllergens))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(ingredientAllergens))) {
 
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -99,7 +113,7 @@ public class AllergenCheckerTool {
                 }
             }
 
-            if (foundAllergens.isEmpty()) {
+            if (!foundAllergens.isEmpty()) {
                 return "Unsafe recipe: allergens detected: " + foundAllergens;
             }
             return "Safe recipe: no allergen detected among " + pListUserAllergen;
@@ -109,7 +123,7 @@ public class AllergenCheckerTool {
         }
     }
 
-    private static InputStream retrieveIngredientAllergens(List<String> pListIngredient) throws IOException {
+    protected InputStream retrieveIngredientAllergens(List<String> pListIngredient) throws IOException {
         String ingredientsText = String.join(", ", pListIngredient);
 
         URL url = URI.create(FUNCTION_URL).toURL();
@@ -127,7 +141,7 @@ public class AllergenCheckerTool {
         return conn.getInputStream();
     }
 
-    private static String getAccessToken() throws IOException {
+    protected static String getAccessToken() throws IOException {
         URL url = URI.create(TOKEN_URL).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -140,7 +154,7 @@ public class AllergenCheckerTool {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
-            for (String line; (line = br.readLine()) != null; ) {
+            for (String line; (line = br.readLine()) != null;) {
                 response.append(line);
             }
 
