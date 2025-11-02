@@ -1,5 +1,6 @@
 package lamagent.agent;
 
+import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,8 +75,8 @@ public class AllergenCheckerTool {
      *
      * @see #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED
      */
-    @Tool("Check if the ingredient list contains any allergens from those provided by the user, calling an external API.")
-    public String checkAllergens(List<String> pListUserAllergen, List<String> pListIngredient) {
+    @Tool("Check if the ingredient array ({{listIngredient}}) of the recipe contains any user allergens ({{listUserAllergen}}) from those provided by the user, calling an external API.")
+    public String checkAllergens(@P("listUserAllergen") String[] pListUserAllergen, @P("listIngredient") String[] pListIngredient) {
         try {
             InputStream ingredientAllergens = retrieveIngredientAllergens(pListIngredient);
 
@@ -99,7 +100,7 @@ public class AllergenCheckerTool {
                 }
             }
 
-            if (foundAllergens.isEmpty()) {
+            if (!foundAllergens.isEmpty()) {
                 return "Unsafe recipe: allergens detected: " + foundAllergens;
             }
             return "Safe recipe: no allergen detected among " + pListUserAllergen;
@@ -109,7 +110,7 @@ public class AllergenCheckerTool {
         }
     }
 
-    private static InputStream retrieveIngredientAllergens(List<String> pListIngredient) throws IOException {
+    private static InputStream retrieveIngredientAllergens(String[] pListIngredient) throws IOException {
         String ingredientsText = String.join(", ", pListIngredient);
 
         URL url = URI.create(FUNCTION_URL).toURL();
