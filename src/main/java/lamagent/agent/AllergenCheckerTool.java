@@ -11,72 +11,35 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import org.json.JSONObject;
 
 /**
  * The {@code AllergenCheckerTool} class provides functionality to check whether a list of food ingredients
- * contains potential allergens based on a user’s specified allergens. It integrates with the
- * <a href="https://www.nyckel.com/">Nyckel API</a> to analyze ingredients and identify allergens
- * with a certain confidence threshold.
- * <p>
- * This tool authenticates via OAuth2 using a client ID and secret to obtain an access token,
- * then calls a remote classification function to detect allergens in ingredient descriptions.
- * </p>
- *
- * <p>
- * Authorized allergen confidence threshold:
- * {@link #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED} = 0.7
- * </p>
+ * contains potential allergens based on a user’s specified allergens.
  */
 public class AllergenCheckerTool {
 
     private static final String TOKEN_URL = "https://www.nyckel.com/connect/token";
-
     private static final String FUNCTION_URL = "https://www.nyckel.com/v1/functions/food-allergens/invoke";
-
     private static final String CLIENT_ID = "wmevwn9kjnv6z41ifm9tl5s5nqiafjg8";
-
-    private static final String CLIENT_SECRET = "52b8w9esxq14y22uio6ic52ru9764z406n1xtsl58hvv4n7knorrcxvzzken28oy";
+    private static final String CLIENT_SECRET =
+            "52b8w9esxq14y22uio6ic52ru9764z406n1xtsl58hvv4n7knorrcxvzzken28oy";
 
     /** Authorized allergen confidence threshold. */
     public static final double THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED = 0.7;
 
     /**
      * Checks whether the given list of ingredients contains any allergens specified by the user.
-     * This method sends the ingredient data to the Nyckel API, which returns potential allergens
-     * with confidence scores. Any allergens with a confidence score above
-     * {@link #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED} and matching a user-provided allergen name
-     * are flagged as detected.
-     * <p>
-     * The result indicates whether the recipe is considered safe or unsafe
-     * based on detected allergens.
-     * </p>
-     *
-     * @param pListUserAllergen a list of allergens that the user wants to avoid
-     * @param pListIngredient a list of ingredients to be analyzed for potential allergens
-     * @return a message indicating whether allergens were found in the ingredients.
-     *         If an error occurs during the API call, the error message is returned.
-     *
-     *         <p><b>Returns examples:</b></p>
-     *         <ul>
-     *             <li>
-     *                 {@code "Safe recipe: no allergen detected among [peanut, milk]"}
-     *                 — if no matching allergens were found.
-     *             </li>
-     *             <li>
-     *                 {@code "Unsafe recipe: allergens detected: peanut (0.91), milk (0.85), "}
-     *                 — if allergens were found.
-     *             </li>
-     *             <li>
-     *                 {@code "Error: unable to check allergens (Network error)"} — if the API call fails.
-     *             </li>
-     *         </ul>
-     *
-     * @see #THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED
      */
-    @Tool("Check if the ingredient array ({{listIngredient}}) of the recipe contains any user allergens ({{listUserAllergen}}) from those provided by the user, calling an external API.")
-    public String checkAllergens(@P("listUserAllergen") String[] pListUserAllergen, @P("listIngredient") String[] pListIngredient) {
+    @Tool(
+            "Check if the ingredient array ({{listIngredient}}) of the recipe "
+            + "contains any user allergens ({{listUserAllergen}}) "
+            + "from those provided by the user, calling an external API."
+    )
+    public String checkAllergens(
+            @P("listUserAllergen") String[] pListUserAllergen,
+            @P("listIngredient") String[] pListIngredient) {
+
         try {
             InputStream ingredientAllergens = retrieveIngredientAllergens(pListIngredient);
 
@@ -93,7 +56,10 @@ public class AllergenCheckerTool {
                     if (confidence > THRESHOLD_ALLERGEN_CONFIDENCE_AUTHORIZED) {
                         for (String allergy : pListUserAllergen) {
                             if (label.contains(allergy.toLowerCase())) {
-                                foundAllergens.append(label).append(" (").append(confidence).append("), ");
+                                foundAllergens.append(label)
+                                              .append(" (")
+                                              .append(confidence)
+                                              .append("), ");
                             }
                         }
                     }
@@ -110,7 +76,8 @@ public class AllergenCheckerTool {
         }
     }
 
-    private static InputStream retrieveIngredientAllergens(String[] pListIngredient) throws IOException {
+    private static InputStream retrieveIngredientAllergens(String[] pListIngredient)
+            throws IOException {
         String ingredientsText = String.join(", ", pListIngredient);
 
         URL url = URI.create(FUNCTION_URL).toURL();
@@ -134,12 +101,14 @@ public class AllergenCheckerTool {
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
 
-        String params = "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET;
+        String params = "grant_type=client_credentials&client_id="
+                + CLIENT_ID + "&client_secret=" + CLIENT_SECRET;
         try (OutputStream os = conn.getOutputStream()) {
             os.write(params.getBytes(StandardCharsets.UTF_8));
         }
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
             for (String line; (line = br.readLine()) != null; ) {
                 response.append(line);
