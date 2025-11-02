@@ -1,5 +1,7 @@
 plugins {
     id 'application'
+    id 'checkstyle'
+    id 'jacoco'
 }
 
 group = 'lamagent'
@@ -22,6 +24,9 @@ dependencies {
     implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
     implementation 'org.slf4j:slf4j-simple:2.0.9'
     implementation 'org.json:json:20231013'
+    
+    'org.junit.jupiter:junit-jupiter:5.10.0'
+    'org.junit.jupiter:junit-jupiter-params:5.10.0'
 }
 
 application {
@@ -30,4 +35,39 @@ application {
 
 run {
     standardInput = System.in
+}
+
+checkstyle {
+    toolVersion "10.3.3"
+    configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+checkstyleMain {
+	configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+checkstyleTest {
+	// If we want, we can define differents rules for the tests
+    configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+// Jacoco
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+jacocoTestReport {
+	dependsOn test
+    reports {
+        xml.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+    }
+}
+
+
+// JUnit
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
 }
