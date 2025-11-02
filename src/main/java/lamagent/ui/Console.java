@@ -1,8 +1,6 @@
 package lamagent.ui;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import lamagent.agent.OllamaCookingAgent;
 
