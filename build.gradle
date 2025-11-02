@@ -1,5 +1,9 @@
 plugins {
     id 'application'
+    id 'java-library'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '6.0.0-rc.2'
 }
 
 group = 'lamagent'
@@ -22,6 +26,9 @@ dependencies {
     implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
     implementation 'org.slf4j:slf4j-simple:2.0.9'
     implementation 'org.json:json:20231013'
+
+	spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+	spotbugs 'com.github.spotbugs:spotbugs:4.7.1'
     
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.mockito:mockito-core:5.12.0'
@@ -38,4 +45,46 @@ test {
 
 run {
     standardInput = System.in
+}
+
+checkstyle {
+    toolVersion "10.3.3"
+    configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+checkstyleMain {
+	configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+checkstyleTest {
+    configFile = rootProject.file('checkstyle/checkstyle.xml')
+}
+
+spotbugs {
+    ignoreFailures = false
+    //includeFilter = rootProject.file('spotbugs/include.xml')
+    excludeFilter = rootProject.file('spotbugs/exclude.xml')
+}
+
+spotbugsMain {
+    reports {
+        html {
+            required = true
+            outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+jacocoTestReport {
+	dependsOn test
+    reports {
+        xml.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+    }
 }
