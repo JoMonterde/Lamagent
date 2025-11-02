@@ -1,11 +1,9 @@
 package lamagent.agent;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
 import java.time.Duration;
-import java.util.List;
 
 /**
  * The {@code OllamaCookingAgent} class provides an AI-powered cooking assistant that suggests
@@ -38,11 +36,10 @@ public class OllamaCookingAgent {
     private final CookingAssistant assistant;
 
     /**
-     * Constructs a new {@code OllamaCookingAgent} and initializes the underlying
-     * {@link ChatLanguageModel} and {@link AllergenCheckerTool}.
+     * Constructs a new {@code OllamaCookingAgent} and initializes the underlying {@link AllergenCheckerTool}.
      */
     public OllamaCookingAgent() {
-        ChatLanguageModel model = OllamaChatModel.builder()
+        OllamaChatModel model = OllamaChatModel.builder()
                 .baseUrl(BASE_URL)
                 .modelName(MODEL_NAME)
                 .timeout(Duration.ofSeconds(60))
@@ -51,7 +48,7 @@ public class OllamaCookingAgent {
         AllergenCheckerTool checker = new AllergenCheckerTool();
 
         assistant = AiServices.builder(CookingAssistant.class)
-                .chatLanguageModel(model)
+                .chatModel(model)
                 .tools(checker)
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
@@ -67,8 +64,7 @@ public class OllamaCookingAgent {
      * recipe could not be provided.
      * </p>
      *
-     * @param pAllergies  the list of user allergens to avoid
-     * @param pPreferences the list of user culinary preferences
+     * @param pQuestion the user's question
      * @return a recipe suggestion as a string, or a message indicating that no safe recipe
      *         could be found
      */

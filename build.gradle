@@ -16,12 +16,11 @@ repositories {
 }
 
 dependencies {
-    def langchain4jVersion = '0.34.0'
+    def langchain4jVersion = '1.8.0'
 
     implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
     implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
     implementation 'org.slf4j:slf4j-simple:2.0.9'
-
     implementation 'org.json:json:20231013'
 }
 
