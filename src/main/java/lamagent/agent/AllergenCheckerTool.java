@@ -1,7 +1,5 @@
 package lamagent.agent;
 
-import dev.langchain4j.agent.tool.P;
-import dev.langchain4j.agent.tool.Tool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +9,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 import org.json.JSONObject;
+
+import dev.langchain4j.agent.tool.P;
+import dev.langchain4j.agent.tool.Tool;
 
 /**
  * The {@code AllergenCheckerTool} class provides functionality to check whether a list of food ingredients
@@ -69,14 +72,14 @@ public class AllergenCheckerTool {
             if (!foundAllergens.isEmpty()) {
                 return "Unsafe recipe: allergens detected: " + foundAllergens;
             }
-            return "Safe recipe: no allergen detected among " + pListUserAllergen;
+            return "Safe recipe: no allergen detected among " + Arrays.toString(pListUserAllergen);
 
         } catch (IOException e) {
             return "Error: unable to check allergens (" + e.getMessage() + ")";
         }
     }
 
-    private static InputStream retrieveIngredientAllergens(String[] pListIngredient)
+    protected static InputStream retrieveIngredientAllergens(String[] pListIngredient)
             throws IOException {
         String ingredientsText = String.join(", ", pListIngredient);
 

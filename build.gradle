@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'java'
     id 'checkstyle'
     id 'jacoco'
 }
@@ -25,8 +26,11 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:2.0.9'
     implementation 'org.json:json:20231013'
     
-    'org.junit.jupiter:junit-jupiter:5.10.0'
-    'org.junit.jupiter:junit-jupiter-params:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-core:5.14.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+
 }
 
 application {
@@ -51,23 +55,21 @@ checkstyleTest {
     configFile = rootProject.file('checkstyle/checkstyle.xml')
 }
 
-// Jacoco
 jacoco {
-    toolVersion = '0.8.7'
+    toolVersion = "0.8.10"
+}
+
+// JUnit
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-	dependsOn test
+    dependsOn test
     reports {
         xml.required = true
         csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+        html.required = true
     }
-}
-
-
-// JUnit
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
 }
