@@ -1,5 +1,7 @@
 package lamagent.agent;
 
+import dev.langchain4j.agent.tool.P;
+import dev.langchain4j.agent.tool.Tool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,11 +12,8 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
 import org.json.JSONObject;
 
-import dev.langchain4j.agent.tool.P;
-import dev.langchain4j.agent.tool.Tool;
 
 /**
  * The {@code AllergenCheckerTool} class provides functionality to check whether a list of food ingredients
