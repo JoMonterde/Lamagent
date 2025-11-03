@@ -8,11 +8,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 /**
  * Unit tests for {@link AllergenCheckerTool}.
@@ -70,7 +70,7 @@ class AllergenCheckerToolTest {
     }
 
     @Test
-    void testCheckAllergens_whenIOExceptionOccurs() throws Exception {
+    void testCheckAllergens_ioExceptionOccurs() throws Exception {
         String[] userAllergens = {"milk"};
         String[] ingredients = {"chocolate"};
 
