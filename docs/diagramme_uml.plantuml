@@ -1,0 +1,29 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AllergenCheckerTool {
+  + AllergenCheckerTool(): 
+  # retrieveIngredientAllergens(String[]): InputStream
+  + checkAllergens(String[], String[]): String
+   accessToken: String
+}
+class Console {
+  + Console(): 
+  + main(String[]): void
+}
+interface CookingAssistant << interface >> {
+  + suggestRecipe(String): String
+}
+class OllamaCookingAgent {
+  + OllamaCookingAgent(): 
+  + suggestRecipe(String): String
+}
+
+AllergenCheckerTool  -[#595959,dashed]->  AllergenCheckerTool 
+Console              -[#595959,dashed]->  OllamaCookingAgent  : "«create»"
+OllamaCookingAgent   -[#595959,dashed]->  AllergenCheckerTool : "«create»"
+OllamaCookingAgent  "1" *-[#595959,plain]-> "assistant\n1" CookingAssistant    
+@enduml
